@@ -2,10 +2,12 @@ import streamlit as st
 import pandas as pd
 import sys
 import os
-from datetime import datetime, date
-from dotenv import load_dotenv
 import plotly.express as px
-load_dotenv()
+
+# Only load .env file if not running in Docker
+if not os.getenv('DOCKER_ENV'):
+    from dotenv import load_dotenv
+    load_dotenv()
 
 # Add the project root to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
