@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from app.agents.models.invoice_type import InvoiceType
+from app.agents.models.invoice_type_output import InvoiceType
 from typing import List
 
 class Anomaly(BaseModel):
