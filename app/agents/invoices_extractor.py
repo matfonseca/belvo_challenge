@@ -6,7 +6,7 @@ class InvoicesExtractor:
         pass
     
     def extract(self, from_date: str, to_date: str, invoice_type: InvoiceType) -> pd.DataFrame:
-        data = pd.read_csv('../data/invoices.csv')
+        data = pd.read_csv('./data/invoices.csv')
         data = self._filter_data(data, from_date, to_date, invoice_type)
         data = data.groupby(['invoice_date', 'invoice_type'], as_index=False)['total_amount'].sum()
         
@@ -20,6 +20,16 @@ class InvoicesExtractor:
         return data
     
     def get_invoices(self, date, invoice_type) -> pd.DataFrame:
-        data = pd.read_csv('../data/invoices.csv')
+        data = pd.read_csv('./data/invoices.csv')
         data = self._filter_data(data, date, date, invoice_type)
         return data
+    
+    def get_date_range(self, invoice_type: InvoiceType) -> tuple:
+        data = pd.read_csv('./data/invoices.csv')
+        data = data[data['type'] == invoice_type.value]
+        data['invoice_date'] = pd.to_datetime(data['invoice_date']).dt.date
+        
+        min_date = data['invoice_date'].min()
+        max_date = data['invoice_date'].max()
+        
+        return min_date, max_date
