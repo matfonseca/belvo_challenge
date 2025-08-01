@@ -69,3 +69,7 @@ README.md
 # Tests (if any)
 tests/
 test_*
+.coverage
+notebooks
+scripts
+tests

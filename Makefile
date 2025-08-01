@@ -21,6 +21,13 @@ help:
 	@echo "  rebuild     - Clean and rebuild everything"
 	@echo "  status      - Show container status"
 	@echo ""
+	@echo "Testing commands:"
+	@echo "  test        - Run all tests"
+	@echo "  test-unit   - Run unit tests only"
+	@echo "  test-extractor - Run InvoicesExtractor tests"
+	@echo "  test-anomaly   - Run AnomalyDetector tests"
+	@echo "  test-coverage  - Run tests with coverage report"
+	@echo ""
 	@echo "Usage with OPENAI_API_KEY:"
 	@echo "  make start OPENAI_API_KEY=your_key_here"
 	@echo "  make run-bg OPENAI_API_KEY=your_key_here"
@@ -107,3 +114,25 @@ start: build run-bg
 # Development workflow (build and run with volumes)
 .PHONY: dev
 dev: build run-dev
+
+# Testing commands
+.PHONY: test
+test:
+	@echo "Running all tests..."
+	pytest tests/ -v
+
+
+.PHONY: test-extractor
+test-extractor:
+	@echo "Running InvoicesExtractor tests..."
+	pytest tests/test_invoices_extractor.py -v
+
+.PHONY: test-anomaly
+test-anomaly:
+	@echo "Running AnomalyDetector tests..."
+	pytest tests/test_anomaly_detector.py -v
+
+.PHONY: test-coverage
+test-coverage:
+	@echo "Running tests with coverage..."
+	pytest tests/ --cov=app --cov-report=html --cov-report=term 
