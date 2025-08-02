@@ -1,6 +1,9 @@
-from pydantic import BaseModel, Field
-from app.agents.models.invoice_type_output import InvoiceType
 from typing import List
+
+from pydantic import BaseModel, Field
+
+from app.agents.models.invoice_type_output import InvoiceType
+
 
 class Anomaly(BaseModel):
     date: str = Field(description="Date of the transaction")
@@ -10,6 +13,7 @@ class Anomaly(BaseModel):
 
     class Config:
         use_enum_values = True
+
 
 class DetectionOutput(BaseModel):
     anomalies: List[Anomaly] = Field(description="List of anomalies")

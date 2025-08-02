@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class InvoiceType(Enum):
-    INFLOW = 'INFLOW'
-    OUTFLOW = 'OUTFLOW'
+    INFLOW = "INFLOW"
+    OUTFLOW = "OUTFLOW"

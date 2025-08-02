@@ -56,7 +56,7 @@ run-bg:
 .PHONY: run-env
 run-env:
 	@echo "Running container with environment file"
-	docker run --rm --name $(CONTAINER_NAME) -p $(PORT):$(PORT) -e OPENAI_API_KEY="$(OPENAI_API_KEY)" --env-file .env $(IMAGE_NAME)
+	docker run --rm --name $(CONTAINER_NAME) -p $(PORT):$(PORT) --env-file .env $(IMAGE_NAME)
 
 # Run with data volume mounted
 .PHONY: run-dev
@@ -135,4 +135,36 @@ test-anomaly:
 .PHONY: test-coverage
 test-coverage:
 	@echo "Running tests with coverage..."
-	pytest tests/ --cov=app --cov-report=html --cov-report=term 
+	pytest tests/ --cov=app --cov-report=html --cov-report=term
+
+# Code quality commands
+.PHONY: lint
+lint:
+	@echo "Running linting checks..."
+	flake8 app/ tests/
+
+.PHONY: format
+format:
+	@echo "Formatting code..."
+	black app/ tests/
+	isort app/ tests/
+
+.PHONY: format-check
+format-check:
+	@echo "Checking code formatting..."
+	black --check app/ tests/
+	isort --check-only app/ tests/
+
+.PHONY: pre-commit-install
+pre-commit-install:
+	@echo "Installing pre-commit hooks..."
+	pre-commit install
+
+.PHONY: pre-commit-run
+pre-commit-run:
+	@echo "Running pre-commit hooks on all files..."
+	pre-commit run --all-files
+
+.PHONY: quality-check
+quality-check: format-check lint test
+	@echo "All quality checks passed!"
