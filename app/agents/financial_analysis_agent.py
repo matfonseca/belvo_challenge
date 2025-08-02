@@ -1,13 +1,14 @@
+from typing import Annotated, Any, Dict, TypedDict
+
 from langchain_core.tools import tool
 from langchain_openai import ChatOpenAI
-from langgraph.graph import StateGraph, END
-from langgraph.prebuilt import ToolNode
-from typing import TypedDict, List, Dict, Any, Annotated
+from langgraph.graph import END, StateGraph
 from langgraph.graph.message import add_messages
-import json
+from langgraph.prebuilt import ToolNode
 
-from app.agents.invoices_extractor import InvoicesExtractor
 from app.agents.models.invoice_type_input import InvoiceType
+from app.extractors.invoices_extractor import InvoicesExtractor
+
 
 class FinancialAnalysisAgent:
     class State(TypedDict):
@@ -29,14 +30,16 @@ class FinancialAnalysisAgent:
         try:
             extractor = InvoicesExtractor()
             df = extractor.get_invoices(date, invoice_type)
-            return df.to_json(orient='records', date_format='iso')
+            return df.to_json(orient="records", date_format="iso")
         except Exception as e:
             return f"Error extracting invoices: {str(e)}"
 
     def __init__(self):
         self.tools = [self.extract_invoices]
         self.tool_node = ToolNode(self.tools)
-        self.model = ChatOpenAI(model="gpt-4o-mini", temperature=0).bind_tools(self.tools)
+        self.model = ChatOpenAI(model="gpt-4o-mini", temperature=0).bind_tools(
+            self.tools
+        )
         self.graph = self._build_graph()
 
     def chatbot(self, state: State):
@@ -45,7 +48,7 @@ class FinancialAnalysisAgent:
 
     def should_continue(self, state: State):
         """Determine whether to continue or end."""
-        messages = state['messages']
+        messages = state["messages"]
         last_message = messages[-1]
         if last_message.tool_calls:
             return "tools"
@@ -56,9 +59,7 @@ class FinancialAnalysisAgent:
         graph_builder.add_node("chatbot", self.chatbot)
         graph_builder.add_node("tools", self.tool_node)
         graph_builder.add_conditional_edges(
-            "chatbot",
-            self.should_continue,
-            {"tools": "tools", END: END}
+            "chatbot", self.should_continue, {"tools": "tools", END: END}
         )
         graph_builder.add_edge("tools", "chatbot")
         graph_builder.set_entry_point("chatbot")
@@ -85,8 +86,7 @@ Your task is to analyze the following anomaly:
 3. Provide insights and recommendations
 
 Please start by extracting the invoice data for the anomaly date."""
-        final_state = self.graph.invoke({
-            "messages": [("human", initial_message)],
-            "anomaly": anomaly_data
-        })
+        final_state = self.graph.invoke(
+            {"messages": [("human", initial_message)], "anomaly": anomaly_data}
+        )
         return final_state

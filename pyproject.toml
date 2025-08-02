@@ -23,7 +23,37 @@ python-dotenv = "^1.1.1"
 ipykernel = "^6.30.0"
 pytest = "^8.4.1"
 pytest-cov = "^6.2.1"
+black = "^24.1.1"
+isort = "^5.13.2"
+flake8 = "^7.0.0"
+pre-commit = "^3.6.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+# Black configuration
+[tool.black]
+line-length = 88
+target-version = ['py312']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+# isort configuration
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 120
+known_first_party = ["app"]
