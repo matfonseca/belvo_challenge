@@ -203,6 +203,16 @@ belvo/
 │   ├── extractors/
 │   │   └── invoices_extractor.py
 │   └── streamlit_app.py
+├── scripts/
+│   ├── etl_invoices.py
+│   └── etl_transactions.py
+├── services/
+│   ├── belvo_service.py
+│   ├── fiscal_mx_service.py
+│   ├── ofda_service.py
+│   └── employment_records_mx_service.py
+├── notebooks/
+│   └── (EDA and analysis notebooks)
 ├── tests/
 │   └── test_invoices_extractor.py
 ├── .github/
@@ -218,6 +228,66 @@ belvo/
 ├── .pre-commit-config.yaml
 └── README.md
 ```
+
+## 📊 Data Analysis Infrastructure
+
+The project includes specialized folders for data extraction and analysis that support the EDA (Exploratory Data Analysis) workflows:
+
+### 📁 `scripts/` - Data Extraction Scripts
+
+Contains ETL (Extract, Transform, Load) scripts that fetch data from Belvo APIs and prepare it for analysis:
+
+- **`etl_invoices.py`**: Extracts invoice data from Fiscal MX API
+  - Fetches paginated invoice data for specified link IDs
+  - Processes and cleans invoice information
+  - Exports data to CSV format for notebook analysis
+
+- **`etl_transactions.py`**: Extracts transaction data from OFDA API
+  - Retrieves bank transaction data with pagination
+  - Handles data transformation and cleaning
+  - Saves processed data for financial analysis
+
+### 🔧 `services/` - API Service Layer
+
+Provides a clean abstraction layer for interacting with Belvo APIs:
+
+- **`belvo_service.py`**: Base service class with authentication
+  - Handles Belvo API authentication and headers
+  - Provides common functionality for all Belvo services
+
+- **`fiscal_mx_service.py`**: Mexican fiscal data service
+  - Specialized methods for invoice data retrieval
+  - Handles Fiscal MX API endpoints and pagination
+
+- **`ofda_service.py`**: Open Finance Data API service
+  - Transaction data extraction from banking APIs
+  - Manages OFDA-specific data formats and structures
+
+- **`employment_records_mx_service.py`**: Employment records service
+  - Extracts Mexican employment and payroll data
+  - Supports employment history analysis
+
+### 📓 `notebooks/` - Exploratory Data Analysis
+
+The data extracted by the `scripts/` using the `services/` layer is consumed by Jupyter notebooks for:
+
+- **Data exploration and visualization**
+- **Statistical analysis and pattern detection**
+- **Feature engineering for anomaly detection**
+- **Model development and testing**
+- **Business insights and reporting**
+
+### 🔄 Data Flow
+
+```
+Belvo APIs → services/ → scripts/ → CSV files → notebooks/ → EDA & Analysis
+```
+
+This architecture separates concerns and allows for:
+- **Reusable API clients** in the `services/` layer
+- **Automated data extraction** via `scripts/`
+- **Interactive analysis** in `notebooks/`
+- **Production-ready anomaly detection** in the main `app/`
 
 ## 🚀 CI/CD Pipeline
 
