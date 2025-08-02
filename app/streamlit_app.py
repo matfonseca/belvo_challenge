@@ -57,11 +57,14 @@ to_date = st.sidebar.date_input(
     "To Date:", value=max_date, help="Select the end date for analysis"
 )
 
-# Button (full width in sidebar)
-detect_button = st.sidebar.button("🔎 Detect Anomalies")
-
 # Validate date range
-if from_date > to_date:
+date_range_valid = from_date <= to_date
+
+# Button (full width in sidebar) - disabled if date range is invalid
+detect_button = st.sidebar.button("🔎 Detect Anomalies", disabled=not date_range_valid)
+
+# Show error message if date range is invalid
+if not date_range_valid:
     st.sidebar.error("From date must be before to date!")
 
 # Initialize session state
