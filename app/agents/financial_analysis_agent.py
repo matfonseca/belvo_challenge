@@ -11,6 +11,8 @@ from app.extractors.invoices_extractor import InvoicesExtractor
 
 
 class FinancialAnalysisAgent:
+    MODEL_NAME = "gpt-4o-mini"
+
     class State(TypedDict):
         messages: Annotated[list, add_messages]
         anomaly: Dict[str, Any]
@@ -37,7 +39,7 @@ class FinancialAnalysisAgent:
     def __init__(self):
         self.tools = [self.extract_invoices]
         self.tool_node = ToolNode(self.tools)
-        self.model = ChatOpenAI(model="gpt-4o-mini", temperature=0).bind_tools(
+        self.model = ChatOpenAI(model=self.MODEL_NAME, temperature=0).bind_tools(
             self.tools
         )
         self.graph = self._build_graph()
