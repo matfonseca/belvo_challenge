@@ -264,7 +264,7 @@ Provides a clean abstraction layer for interacting with Belvo APIs:
   - Manages OFDA-specific data formats and structures
 
 - **`employment_records_mx_service.py`**: Employment records service
-  - Extracts Mexican employment and payroll data
+  - Extracts Mexican employment records
   - Supports employment history analysis
 
 ### 📓 `notebooks/` - Exploratory Data Analysis
