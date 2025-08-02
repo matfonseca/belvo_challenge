@@ -38,4 +38,5 @@ ENV DOCKER_ENV=true
 HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
 
 # Run streamlit app
-CMD ["streamlit", "run", "app/streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+# Use PORT environment variable for Heroku, fallback to 8501 for local development
+CMD streamlit run app/streamlit_app.py --server.port=${PORT:-8501} --server.address=0.0.0.0 --server.headless=true --server.enableCORS=false --server.enableXsrfProtection=false
